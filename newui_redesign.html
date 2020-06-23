@@ -1,0 +1,422 @@
+<!-- Made by Baizel Mathew-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Controller</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js  "></script>
+    <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css"-->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        html, .valign-wrapper {
+            height: 100%;
+            min-width: 300px;
+        }
+    
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            box-sizing: border-box;
+            background-size: cover;
+            background-image: linear-gradient(45deg, #ff9b9c 0%, #ffd4a7 100%);
+            background-repeat: no-repeat;
+            font-family: "Roboto", sans-serif;
+        }
+    
+        #player-body {
+            margin-top: 0px;
+            user-select: none;
+            border-radius: 5px;
+            box-shadow: 0 15px 20px 0 #c58371;
+            background-color: rgba(36, 36, 36, 0.39);
+        }
+    
+        .status-wrapper {
+            margin: auto;
+            position: relative;
+            width: 15px;
+            height: 15px;
+            margin: auto;
+            margin-bottom: 5px;
+            background: red;
+            border-radius: 50%;
+
+            box-shadow: inset 0 0 10px #000000;
+        }
+
+        .conn-status {
+            height: 100%;
+            width: fit-content;
+            background-color: red;
+            display: block;
+            float:left;
+            position: absolute;
+        }
+
+        .status-after {
+          background: blue;
+          width: 20px;
+          height: 50%;
+          position: absolute;
+          display: block;
+          float: left;
+        }
+        .status-after:before {
+          content: '';
+          background-image: radial-gradient(circle at 100% 0%, transparent 20px, blue 20px);;
+          position: absolute;
+          top: 0;
+          left: 100%;
+          width: 20px;
+          height: 100%;
+          display: block;
+        }
+        .status-after:after {
+          content: '';
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          background: blue;
+          border-radius: 0 100% 0 0 / 0 100% 0 0;
+          bottom: 100%;
+          left: 0;
+          display: block;
+        }
+
+        .card > .card-image {
+            border-radius: 5px 5px 0px 0px;
+            overflow: hidden;
+        }
+
+        .card-image > img {
+            filter: brightness(50%);
+        }
+
+        .image-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            text-shadow: 0px 0px 6px rgb(36, 36, 36);
+        }
+
+        .card .card-image .card-title {
+            width: 100%;
+            background-image: linear-gradient(rgba(0,0,0,0), rgba(36, 36, 36, 0.6));
+            text-shadow: 0px 0px 6px rgb(36, 36, 36);
+        }
+
+
+        .card-action {
+            background-color: initial !important;
+        }
+    
+        .top-bar {
+            padding: 15px;
+            height: 15%;
+            background-image: linear-gradient(rgba(36, 36, 36, 0.50), rgba(0,0,0,0));
+        }
+    
+        #player-control {
+            left: 0;
+            width: 100%;
+            bottom: 0;
+        }
+    
+        input[type=range] {
+            border: 0;
+        }
+    
+        input[type=range]::-webkit-slider-thumb {
+            background-color: white;
+        }
+    
+        input[type=range]::-moz-range-thumb {
+            background-color: white;
+        }
+    
+        input[type=range]::-ms-thumb {
+            background-color: white;
+        }
+    
+        input[type=range] + .thumb.active .value {
+            color: white;
+        }
+    
+        .card .card-action {
+            border-top: 0;
+        }
+
+        .card-action {
+            width: max-content;
+            margin:auto;
+        }
+
+        .card-action > a.media-buttons {
+            margin: 0px 20px !important;
+        }
+
+        a.media-buttons > i {
+            color: black;
+        }
+        /*#SongName{*/
+        /*    font-size: 5em;*/
+        /*}*/
+        /*#SongDescription {*/
+        /*    font-size: 2em;*/
+        /*}*/
+    
+    </style>
+</head>
+
+<body>
+
+<div class="valign-wrapper container no-margin row">
+    <div class="col offset-l3 l6 s12">
+
+        <!-- Connection status blimp -->
+        <div class="status-wrapper">
+            <div class="conn-status center">
+                
+            </div>
+        </div>
+
+        <!-- Player card Start-->
+        <div class="card sticky-action" id="player-body">
+
+            <!-- Album art-->
+            <div class="card-image">
+
+                <img src="https://i.scdn.co/image/e1048886b38af659da52e708c58abcfc5e804dce">
+
+                <!-- Image overlay -->
+                <div class="image-overlay">
+                    <div class="top-bar">
+                        <div class="left waves-effect waves-block waves-light activator">
+                            <i class="material-icons white-text ">queue_music</i>
+                        </div>
+                        <div class="right waves-effect waves-block waves-light">
+                            <i class="material-icons white-text ">add</i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song info -->
+                <div class="song-info">
+                    <div class="card-title">
+                        <span id="SongName">{{SongName}}</span>
+                        <br/>
+                        <span id="SongDescription">{{SongDescription}}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Playback scrubber -->
+            <div class="card-content">
+                <div class="">
+                    <p class="range-field">
+                        <input type="range" min="0" max="1000" id="seekAudio" value="0"/>
+                    </p>
+                    <p class="left black-text">0:00</p>
+                    <p class="right black-text">-:--</p>
+                </div>
+            </div>
+
+            <!-- Playback controls -->
+            <div class="card-action valign-wrapper">
+                <a href="#" class="media-buttons waves-effect waves-light"><i class="material-icons small">skip_previous</i></a>
+                <a href="#" class="media-buttons waves-effect waves-light"><i class="material-icons medium">play_circle_filled</i></a>
+                <a href="#" class="media-buttons waves-effect waves-light"><i class="material-icons small">skip_next</i></a>
+            </div>
+
+            <!-- Track queue -->
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">Queue<i class="material-icons right">keyboard_arrow_down</i></span>
+                <p>TODO: Add the track queue here!</p>
+            </div>
+
+        </div>
+        <!-- Player card End-->
+
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    $("#searchForm").submit(function(e) {
+        e.preventDefault();
+    });
+    $(document).ready(function () {
+        $('.tabs').tabs();
+        $('#modal').modal({
+            onCloseEnd: function () {
+                $("#songsRes ul").empty();
+            }
+        });
+    });
+    var socket = "{{socket}}";
+    var token = "{{token}}"
+    var connection = new WebSocket(socket);
+
+    function addOn(maxTries) {
+        connection = new WebSocket(socket);
+        connection.onmessage = function (m) {
+            msg = JSON.parse(m.data);
+            console.log(msg);
+            (msg["is_paused"]) ? document.getElementById("PlayIcon").innerHTML = "play_arrow" : document.getElementById("PlayIcon").innerHTML = "pause";
+            document.getElementById("SongName").innerHTML = msg["track"]["name"];
+            document.getElementById("SongDescription").innerHTML = "By " + msg["track"]["artist"]["name"];
+            populateQueue(JSON.parse(msg.queue));
+        };
+        connection.onclose = function m(uri, protocol) {
+            console.log("on close");
+            let ele = document.getElementById("conStatusBar");
+            ele.classList.remove("green");
+            ele.classList.add("red");
+
+            console.log("Max tries " + maxTries);
+            if (maxTries >= 0) {
+                setTimeout(function () {
+                    document.getElementById("conStatusBarMsg").innerText = "Trying to reconnect..." + maxTries + " tries left";
+                    console.log("Trying to connect again. " + maxTries + " tries left");
+                    addOn(--maxTries);
+                }, 1000);
+            }
+
+
+        };
+        connection.onopen = function (event) {
+            maxTries = 10;
+            let ele = document.getElementById("conStatusBar");
+            ele.classList.remove("red");
+            ele.classList.add("green");
+            document.getElementById("conStatusBarMsg").innerText = "Connected to server";
+
+        };
+    }
+
+    addOn(5);
+
+    function onPrevious() {
+        connection.send(JSON.stringify({'payload': 'previous'}));
+    }
+
+    function search() {
+        let q = $("#songSearch").val();
+        document.getElementById("searchArea").style.visibility = "hidden";
+        $.ajax({
+            url: "https://api.spotify.com/v1/search?q=" + q + "&type=track&limit=15",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (data) {
+                var songs = data.tracks.items;
+                for (i of songs) {
+                    console.log(i);
+                    let res =
+                        '<li>' +
+                        '<div class="row">' +
+                        '    <div class="card horizontal grey">' +
+                        '      <div class="card-image">' +
+                        '        <img src="' + i.album.images[0].url + '" alt="result" height="128">' +
+                        '      </div>' +
+                        '      <div class="card-stacked">' +
+                        '        <div class="card-content">' +
+                        '          <p>' + i.name + ' by ' + i.artists[0].name + '</p>' +
+                        '        </div>' +
+                        '        <div class="card-action black-text">' +
+                        '           <a href="#" onclick="playURI(\'' + i.uri + '\')" >Add to Queue<i  class="material-icons right">add</i></a>' +
+                        '        </div>' +
+                        '      </div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>' +
+                        '</li>';
+
+
+                    $("#songsRes ul").append(res);
+                }
+                songs = [];
+                $('#modal').modal('open');
+                document.getElementById("searchArea").style.visibility = "visible";
+            },
+            error: function () {
+                document.getElementById("searchArea").style.visibility = "visible";
+            }
+        });
+
+
+    }
+
+    function onNext() {
+        connection.send(JSON.stringify({'payload': 'next'}));
+    }
+
+    function onPlay() {
+        connection.send(JSON.stringify({'payload': 'play'}));
+    }
+
+    function onQueue() {
+        try {
+            regex = /(track\/)([0-9A-z]*)/;
+            uri = "spotify:track:" + regex.exec(document.getElementById("song_uri").value)[2];
+            connection.send(JSON.stringify({'payload': 'playUri', 'uri': uri}));
+            document.getElementById("song_uri").value = "";
+        } catch (err) {
+            alert("Invalid link or socket error");
+        }
+    }
+
+    function playURI(uri) {
+        connection.send(JSON.stringify({'payload': 'playUri', 'uri': uri}));
+        $('#modal').modal('close');
+    }
+
+    function populateQueue(queue) {
+        let trackIds = "";
+
+        for (let uriQ of queue) {
+            trackIds = trackIds + ((trackIds.length === 0) ? "" : ",") + uriQ.split(":")[2];
+        }
+        if (trackIds.length !== 0) {
+            $.ajax({
+                url: "https://api.spotify.com/v1/tracks/?ids=" + trackIds,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (data) {
+                    let res = "";
+                    for (let tracks of data.tracks) {
+
+                        res = res + " <li class=\"collection-item avatar grey darken-1\">\n" +
+                            "                    <img height=\"64\" src=" + tracks.album.images[0].url + " alt=\"\" class=\"circle\">\n" +
+                            "                    <span class=\"title\">" + tracks.name + "</span>\n" +
+                            "                    <p>By " + tracks.artists[0].name + " </p>\n" +
+                            "                </li>";
+                    }
+                    document.getElementById("queueCollection").innerHTML = res;
+                }
+            });
+        } else {
+            let res = '<li class="collection-item avatar grey darken-1">\n' +
+                '                        <img height="64" src="http://pixelartmaker.com/art/8e901395c4a3dd4.png" alt="" class="circle">\n' +
+                '                        <span class="title">Nothing Added Yet</span>\n' +
+                '                        <p>Add a song and it will appear here!</p>\n' +
+                '                    </li>';
+            document.getElementById("queueCollection").innerHTML = res;
+        }
+    }
+</script>
